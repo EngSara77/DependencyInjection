@@ -1,0 +1,103 @@
+﻿@page "/"
+@using DependencyInjection.Data.Services
+@using System.Timers
+
+
+
+
+<style>
+    .TransientColor {
+        background-color: #fff59c !important
+    }
+
+    .ScopedColor {
+        background-color: aquamarine !important
+    }
+
+    .SingletonColor {
+        background-color: #ff292991 !important
+    }
+</style>
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<button @onclick="StartTimer">Start</button>
+
+<h4>@counter</h4>
+
+<table class="table table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Service Type</th>
+            <th>Operation Of Own Service</th>
+            <th>Operation Of Another Service</th>
+        </tr>
+    </thead>
+    <tbody id="OperationsBlock">
+        <tr>
+            <td class="TransientColor">Transient </td>
+            <td class="TransientColor">@service.Transient</td>
+            <td class="TransientColor">@service.Transient2</td>
+        </tr>
+        <tr>
+            <td class="ScopedColor">Scoped</td>
+            <td class="ScopedColor">@service.Scoped</td>
+            <td class="ScopedColor">@service.Scoped2</td>
+        </tr>
+        <tr>
+            <td class="SingletonColor">Singleton</td>
+            <td class="SingletonColor">@service.Singleton</td>
+            <td class="SingletonColor">@service.Singleton2</td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code
+{
+    [Inject]
+    private DependencyService service { get; set; }
+
+    private static System.Timers.Timer timer;
+    
+    private int counter = 60;
+
+    public void StartTimer()
+    {
+        timer = new System.Timers.Timer(1000);
+        timer.Elapsed += CountDownTimer;
+        timer.Enabled = true;
+    }
+
+    public void CountDownTimer(Object source, ElapsedEventArgs e)
+     {
+        if (counter > 0)
+        {
+            service.TestDependencyLifeCycle();
+            counter -= 1;
+
+        }
+        else
+        {
+            timer.Enabled = false;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    //protected override Task OnInitializedAsync()
+    //{
+    //    //while (true)
+    //    //{
+    //    //    service.TestDependencyLifeCycle();
+    //    //}
+    //    return base.OnInitializedAsync();
+    //}
+
+}

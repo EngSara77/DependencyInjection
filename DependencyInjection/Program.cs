@@ -1,8 +1,5 @@
-using DependencyInjection.Data;
 using DependencyInjection.Data.Services;
 using DependencyInjection.Data.Services.Interfaces;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +11,8 @@ builder.Services.AddTransient<ITransientOperation,Operation>();
 builder.Services.AddSingleton<ISingletonOperation,Operation>();
 builder.Services.AddTransient<OperationService>();
 builder.Services.AddScoped<DependencyService>();
+
+builder.Services.AddScoped<ITimeTravel,TimeTravel>();
 
 var app = builder.Build();
 
